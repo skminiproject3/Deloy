@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  # ✅ 1️⃣ AI 모듈 (FastAPI + LangChain)
+  ai-module:
+    image: hands7/mini3_ai:0.1
+    container_name: ai-module
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+    restart: unless-stopped
+
+  # ✅ 2️⃣ 백엔드 (Spring Boot + MariaDB 연동)
+  backend:
+    image: hands7/springbootreactjs:0.2
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+      - ai-module
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/dormdb
+      - SPRING_DATASOURCE_USERNAME=boot
+      - SPRING_DATASOURCE_PASSWORD=boot
+      - SPRING_PROFILES_ACTIVE=prod
+    restart: unless-stopped
+
+  # ✅ 3️⃣ 프론트엔드 (React 빌드 결과)
+  frontend:
+    image: hands7/frontend:0.1
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_BASE=http://backend:8080
+    restart: unless-stopped
+
+  # ✅ 4️⃣ DB (MariaDB)
+  mariadb:
+    image: mariadb:10.11.8
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=dormdb
+      - MYSQL_USER=boot
+      - MYSQL_PASSWORD=boot
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:
