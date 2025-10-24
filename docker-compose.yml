@@ -12,6 +12,9 @@ services:
       - PYTHONPATH=/app
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - TAVILY_API_KEY=${TAVILY_API_KEY}
+    volumes:                         # ✅ 여기 추가
+      - ./ai/vector_stores:/app/vector_stores
+      - ./ai/uploaded_pdfs:/app/uploaded_pdfs
     restart: unless-stopped
 
   # ✅ 2️⃣ 백엔드 (Spring Boot + MariaDB 연동)
@@ -52,10 +55,10 @@ services:
       - MYSQL_USER=boot
       - MYSQL_PASSWORD=boot
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql   # ✅ DB 데이터 영구 저장
     ports:
       - "3306:3306"
     restart: unless-stopped
 
 volumes:
-  mariadb_data:
+  mariadb_data:                       # ✅ 이건 그대로 유지 (DB용)
