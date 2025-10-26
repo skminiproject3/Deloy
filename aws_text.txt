@@ -1,0 +1,33 @@
+cat <<EOF| sudo tee /work/myproject/docker-compose.yml
+
+services:
+  mydb-svc:
+    image: mariadb:10.11.8
+    ports:
+    - "3306:3306"
+    volumes:
+      - /home/r/docker-volume/mariadb/conf.d:/etc/mysql/conf.d
+      - /home/r/docker-volume/mariadb/store:/var/lib/mysql
+    env_file: /home/r/docker-volume/mariadb/env/.env
+
+  backend:
+    image: hands7/miniproject3-backend:0.2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mydb-svc
+    restart: always
+    env_file: /home/r/docker-volume/mariadb/env/.env
+
+  frontend:
+    image: hands7/miniproject3_frontend:0.4
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_APIURL=http://54.226.16.132:8080/api
+      - VITE_MODE=Prod
+
+EOF
