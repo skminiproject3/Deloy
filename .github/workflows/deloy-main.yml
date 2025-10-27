@@ -17,7 +17,7 @@ jobs:
       run: echo "RELEASE_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
     # ===============================
-    # EC2로 SSH 접속해서 배포만 수행
+    # EC2로 SSH 접속해서 배포 수행
     # ===============================
     - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@master
@@ -26,16 +26,24 @@ jobs:
         username: ec2-user
         key: ${{ secrets.EC2_KEY }}
         script: |
-          echo "Pulling latest image from Docker Hub..."
+          echo "=================================="
+          echo " Pulling latest images from Docker Hub..."
+          echo "=================================="
           docker pull hands7/miniproject3-backend:0.4
           docker pull hands7/miniproject3-ai:0.3
           docker pull hands7/miniproject3_frontend:0.5
           docker pull mariadb:10.11.8
-          
+
+          echo "=================================="
           echo " Stopping old containers..."
-          docker compose -f /work/myproject/docker-compose.yml down
+          echo "=================================="
+          docker-compose -f /work/myproject/docker-compose.yml down
 
-          echo "Starting new containers..."
-          docker compose -f /work/myproject/docker-compose.yml up -d
+          echo "=================================="
+          echo " Starting new containers..."
+          echo "=================================="
+          docker-compose -f /work/myproject/docker-compose.yml up -d
 
-          echo "Deployment complete!!"
+          echo "=================================="
+          echo " Deployment complete!"
+          echo "=================================="
