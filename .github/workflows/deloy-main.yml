@@ -38,4 +38,4 @@ jobs:
           echo "🚀 Starting new containers..."
           docker compose -f /work/myproject/docker-compose.yml up -d
 
-          echo "✅ Deployment complete!"
+          echo "✅ Deployment complete!!"
