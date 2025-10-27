@@ -1,7 +1,7 @@
 cat <<EOF| sudo tee /work/myproject/docker-compose.yml
 
 services:
-  mydb-svc:
+  mysql-svc:
     image: mariadb:10.11.8
     ports:
     - "3306:3306"
@@ -11,23 +11,41 @@ services:
     env_file: /home/r/docker-volume/mariadb/env/.env
 
   backend:
-    image: hands7/miniproject3-backend:0.2
+    image: hands7/miniproject3-backend:0.4
     ports:
       - "8080:8080"
     depends_on:
-      - mydb-svc
+      - mysql-svc
+      - ai
     restart: always
     env_file: /home/r/docker-volume/mariadb/env/.env
+    environment:
+      - PYTHON_SERVER_URL=http://ai:8000
+    volumes:
+      - /home/r/miniproject3/backend/uploads:/app/uploads
 
   frontend:
-    image: hands7/miniproject3_frontend:0.4
+    image: hands7/miniproject3_frontend:0.5
     restart: always
     depends_on:
       - backend
     ports:
       - "80:80"
     environment:
-      - VITE_APIURL=http://54.226.16.132:8080/api
+      - VITE_APIURL=http://backend:8080/api
       - VITE_MODE=Prod
+
+  ai:
+      image: hands7/miniproject3-ai:0.3
+      ports:
+        - "8000:8000"
+      depends_on:
+        - mysql-svc
+      env_file:
+        - /home/r/miniproject3/AI/.env
+      volumes:
+        - /home/r/miniproject3/AI/uploaded_pdfs:/app/uploaded_pdfs
+        - /home/r/miniproject3/AI/vector_stores:/app/vector_stores
+      user: "0:0" 
 
 EOF

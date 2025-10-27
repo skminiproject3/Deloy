@@ -1,2 +1,6 @@
 keys/
 *.pem
+
+.env
+**/.env
+.env.*

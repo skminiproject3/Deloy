@@ -10,7 +10,7 @@ services:
     env_file: C:/mydeploy/docker-volume/mariadb/env/.env
 
   backend:
-    image: hands7/miniproject3-backend:0.1
+    image: hands7/miniproject3-backend:0.9
     ports:
       - "8080:8080"
     depends_on:
@@ -26,9 +26,11 @@ services:
       # DB_PASSWORD: 'boot'
     environment:
       - PYTHON_SERVER_URL=http://ai:8000
+    volumes:
+      - c:/miniproject3/backend/uploads:/app/uploads
 
   frontend:
-    image: hands7/miniproject3_frontend:0.3
+    image: hands7/miniproject3_frontend:0.5
     ports:
       - "80:80"
     depends_on:
@@ -47,11 +49,11 @@ services:
     restart: always
 
     env_file:
-      - ../AI/.env
+      - C:/miniproject3/AI/.env
 
     volumes:
-      - ../AI/uploaded_pdfs:/app/uploaded_pdfs
-      - ../AI/vector_stores:/app/vector_stores
+      - C:/miniproject3/AI/uploaded_pdfs:/app/uploaded_pdfs
+      - C:/miniproject3/AI/vector_stores:/app/vector_stores
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
