@@ -7,13 +7,13 @@
 * API 설계서 - REST API 명세
 
 ## 2. 백엔드 개발 문서
-* Spring Boot 개발 가이드 - 백엔드 구현 및 AI 연동
+* Spring Boot 개발 가이드 - 백엔드 구현 및 AI 연동, LangChain/Backend 연동 방법
 
 ## 3. 프론트엔드 개발 문서
 * React 개발 가이드 - 프론트엔드 구현 및 채팅 인터페이스
 
 ## 4. AI 모듈 개발 문서
-* AI 모듈 구현 가이드 - LangChain 기반 AI 서비스, LangChain/Backend 연동 방법
+* AI 모듈 구현 가이드 - LangChain 기반 AI 서비스
 
 ## 5. 배포 및 운영 문서
 * 컨테이너화 가이드 - Docker-compose 설정 및 이미지 구성
